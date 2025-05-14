@@ -12,8 +12,10 @@ RUN npm install
 
 COPY prisma ./prisma/
 
+RUN npx prisma generate
+
 COPY . .
 
 RUN npm run build
 
-CMD ["dockerize", "-wait", "tcp://db:5432", "-timeout", "30s", "npm", "run", "start:dev"]
+CMD ["sh", "-c", "dockerize -wait tcp://db:5432 -timeout 30s && npx prisma migrate deploy && npm run start:dev"]
